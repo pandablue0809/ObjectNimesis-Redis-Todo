@@ -1,44 +1,37 @@
-// src/controllers/taskController.ts
-import { FastifyReply, FastifyRequest } from 'fastify';
-import { createTask, completeTask } from '../services/taskService';
-import { Task } from '../types';
+import { FastifyRequest, FastifyReply } from 'fastify';
+import * as taskService from '../services/taskService';
+import { Task } from '../types/index';
 
-// Define the types for request params
-interface CreateTaskParams {
-  userId: string;
-}
-
-interface CompleteTaskParams {
-  taskId: string;
-}
-
-export const createTaskHandler = async (
-  request: FastifyRequest<{ Params: CreateTaskParams; Body: Task }>,
-  reply: FastifyReply
-) => {
+// Create a task
+export const createTask = async (request: FastifyRequest<{ Params: { userId: string }; Body: Task }>, reply: FastifyReply): Promise<void> => {
   const { userId } = request.params;
   const task = request.body;
+  task.userId = userId;
+  await taskService.createTask(task);
+  reply.code(201).send({ message: 'Task created', id: task.id });
+};
 
-  const success = await createTask(userId, task);
-  
-  if (success) {
-    reply.status(201).send({ message: 'Task created successfully' });
+// Get a task by ID
+export const getTaskById = async (request: FastifyRequest<{ Params: { taskId: string } }>, reply: FastifyReply): Promise<void> => {
+  const { taskId } = request.params;
+  const task = await taskService.getTaskById(taskId);
+  if (task) {
+    reply.send(task);
   } else {
-    reply.status(500).send({ error: 'Error creating task' });
+    reply.code(404).send({ message: 'Task not found' });
   }
 };
 
-export const completeTaskHandler = async (
-  request: FastifyRequest<{ Params: CompleteTaskParams }>,
-  reply: FastifyReply
-) => {
+// Complete a task
+export const completeTask = async (request: FastifyRequest<{ Params: { taskId: string } }>, reply: FastifyReply): Promise<void> => {
   const { taskId } = request.params;
-  
-  const success = await completeTask(taskId);
-  
-  if (success) {
-    reply.send({ message: 'Task marked as complete' });
-  } else {
-    reply.status(404).send({ error: 'Task not found or already completed' });
-  }
+  await taskService.completeTask(taskId);
+  reply.send({ message: 'Task marked as completed' });
+};
+
+// Delete a task
+export const deleteTask = async (request: FastifyRequest<{ Params: { taskId: string } }>, reply: FastifyReply): Promise<void> => {
+  const { taskId } = request.params;
+  await taskService.deleteTask(taskId);
+  reply.send({ message: 'Task deleted' });
 };
