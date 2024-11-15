@@ -1,12 +1,24 @@
 import React, { useState } from 'react';
 import { createUser } from '../api';
 
-const UserForm: React.FC = () => {
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface UserFormProps {
+  onUserCreated: (newUser: User) => void;
+}
+
+const UserForm: React.FC<UserFormProps> = ({ onUserCreated }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
   const handleSubmit = (async () => {
-    await createUser(name, email);
+    const newUser = await createUser( name, email );
+    console.log(newUser)
+    onUserCreated(newUser.data);
     setName('');
     setEmail('');
   });
