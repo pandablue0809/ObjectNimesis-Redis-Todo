@@ -9,4 +9,5 @@ export interface Task {
 export interface User {
   id: string;
   name: string;
+  email: string;
 }

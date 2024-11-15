@@ -1,24 +1,20 @@
 import Fastify from 'fastify';
-import * as userController from './controllers/userController'
-import * as taskController from './controllers/taskController';
+import userRoutes from './routes/userRoutes';
+import taskRoutes from './routes/taskRoutes';
+import fastifyCors from '@fastify/cors';
 
-const fastify = Fastify({
-  logger: true
+const fastify = Fastify({ logger: true });
+
+fastify.register(fastifyCors, {
+  origin: '*', // Allow all origins for development
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // If you need to handle cookies and credentials
 });
 
-// User routes
-fastify.post('/users', userController.createUser);
-fastify.get('/users/:userId', userController.getUserById);
-fastify.put('/users/:userId', userController.updateUser);
-fastify.delete('/users/:userId', userController.deleteUser);
+fastify.register(userRoutes);
+fastify.register(taskRoutes);
 
-// Task routes
-fastify.post('/users/:userId/tasks', taskController.createTask);
-fastify.get('/tasks/:taskId', taskController.getTaskById);
-fastify.put('/tasks/:taskId/complete', taskController.completeTask);
-fastify.delete('/tasks/:taskId', taskController.deleteTask);
-
-// Start the server
 fastify.listen({ port: 3001 }, (err, address) => {
   if (err) {
     fastify.log.error(err);
