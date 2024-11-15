@@ -90,28 +90,3 @@ export const deleteTask = async (
     return reply.code(500).send({ message: 'Error deleting task' });
   }
 };
-
-// Get a task by ID
-// export const getTaskById = async (request: FastifyRequest<{ Params: { taskId: string } }>, reply: FastifyReply): Promise<void> => {
-//   const { taskId } = request.params;
-//   const task = await taskService.getTaskById(taskId);
-//   if (task) {
-//     reply.send(task);
-//   } else {
-//     reply.code(404).send({ message: 'Task not found' });
-//   }
-// };
-
-// // Complete a task
-// export const completeTask = async (request: FastifyRequest<{ Params: { taskId: string } }>, reply: FastifyReply): Promise<void> => {
-//   const { taskId } = request.params;
-//   await taskService.completeTask(taskId);
-//   reply.send({ message: 'Task marked as completed' });
-// };
-
-// // Delete a task
-// export const deleteTask = async (request: FastifyRequest<{ Params: { taskId: string } }>, reply: FastifyReply): Promise<void> => {
-//   const { taskId } = request.params;
-//   await taskService.deleteTask(taskId);
-//   reply.send({ message: 'Task deleted' });
-// };
