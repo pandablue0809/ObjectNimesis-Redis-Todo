@@ -5,4 +5,12 @@ const redis = new Redis({
   port: 6379, // Default Redis port
 });
 
+redis.on('connect', () => {
+  console.log('Connected to Redis');
+});
+
+redis.on('error', (error) => {
+  console.error('Redis connection error:', error);
+});
+
 export { redis };

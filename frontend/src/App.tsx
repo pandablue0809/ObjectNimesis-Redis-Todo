@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import UserForm from './components/UserForm';
+import UserList from './components/UserList';
+import TaskForm from './components/TaskForm';
+import TaskList from './components/TaskList';
 
-function App() {
+const App: React.FC = () => {
+  const [userId, setUserId] = useState(''); 
+  const [userName, setUserName] = useState(''); 
+
+  const handleUserSelect = (id: string , name:string) => {
+    setUserId(id);
+    setUserName(name);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen bg-gray-100 p-8">
+      <div className='max-w-[1280px] m-auto'>
+        <h1 className="text-center text-4xl py-8">Task Management</h1>
+        <div className='flex'>
+          <div className='w-[50%] px-2'>
+            <UserForm />
+            <UserList onSelect={handleUserSelect}/> 
+          </div>
+          <div className='w-[50%] px-2'>
+            {userId && (
+              <>
+                <TaskForm userId={userId} userName={userName}/>
+                <TaskList userId={userId} userName={userName} />
+              </>
+            )}
+          </div>  
+        </div>      
+      </div>      
     </div>
   );
-}
+};
 
 export default App;
