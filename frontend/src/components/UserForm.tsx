@@ -17,7 +17,6 @@ const UserForm: React.FC<UserFormProps> = ({ onUserCreated }) => {
 
   const handleSubmit = (async () => {
     const newUser = await createUser( name, email );
-    console.log(newUser)
     onUserCreated(newUser.data);
     setName('');
     setEmail('');
